@@ -1,8 +1,8 @@
+import { aptos, aptosConfig } from '@/utils/aptosClient';
+import { AptosClient } from 'aptos';
 import React, { useState } from 'react';
-import { AptosClient, TxnBuilderTypes, BCS } from 'aptos';
-
 // Initialize Aptos Client
-const client = new AptosClient('https://api.testnet.aptoslabs.com/'); // Use the appropriate endpoint for your network
+// const client = new AptosClient('https://api.testnet.aptoslabs.com/'); 
 
 const ContractInteraction: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
@@ -10,7 +10,7 @@ const ContractInteraction: React.FC = () => {
   const sendTransaction = async () => {
     try {
       const accountAddress = '0x223d508f051f5869e232658de4a25c493813273319b5130ae54838c609be630d'; // Replace with your actual account address
-      const functionId = '0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1::YourModule::your_function'; // Replace with your contract function path
+      const functionId = '0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1::RockPaperScissors::your_function'; // Replace with your contract function path
 
       // Prepare payload
       const payload = {
@@ -21,13 +21,13 @@ const ContractInteraction: React.FC = () => {
       };
 
       // Submit transaction
-      const txn = await client.submitTransaction({
+      const txn = await aptos.submitTransaction({
         sender: accountAddress,
         payload,
       });
 
       // Wait for transaction to be confirmed
-      await client.waitForTransaction(txn.hash);
+      await aptos.waitForTransaction(txn.hash);
       setResult(`Transaction Sent: ${txn.hash}`);
     } catch (error) {
       console.error('Transaction Failed:', error);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PetraWallet } from 'petra-plugin-wallet-adapter'; // Ensure correct import
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design"; 
 
 const WalletConnectButton: React.FC = () => {
   const [account, setAccount] = useState<{ address: string; publicKey: string } | null>(null);
@@ -27,9 +28,7 @@ const WalletConnectButton: React.FC = () => {
 
   return (
     <div>
-      <button onClick={handleConnect}>
-        Connect to Petra Wallet
-      </button>
+      <WalletSelector/> 
       {account && (
         <div>
           <p><strong>Connected Account:</strong></p>

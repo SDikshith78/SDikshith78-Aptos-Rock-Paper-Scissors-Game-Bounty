@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
+import { InputTransactionData } from "@aptos-labs/wallet-adapter-core";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+
+
+const moduleAddress = "0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1"
+const moduleName = "RockPaperScissors"
 
 const RockPaperScissors: React.FC = () => {
   const [account, setAccount] = useState<{ address: string; publicKey: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const {signAndSubmitTransaction}  = useWallet()
 
   const handleConnect = async () => {
     try {
@@ -24,25 +31,28 @@ const RockPaperScissors: React.FC = () => {
       return;
     }
 
-    try {
-      const tx = {
-        type: "entry_function_payload",
-        function: "0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1::rock_paper_scissors::play_game", // Replace with actual values
-        arguments: [choice], // choice should be 'rock', 'paper', or 'scissors'
-        type_arguments: [],
+    // try {
+      const tx: InputTransactionData = {
+        data: {
+          function: `${moduleAddress}::${moduleName}::start_game`,
+          functionArguments: [],
+        },
       };
+      const response = await signAndSubmitTransaction(tx);
+      console.log(response);
 
       console.log("Transaction Object:", tx); // Verify the transaction object
 
-      const petraWallet = new PetraWallet();
-      const result = await petraWallet.signAndSubmitTransaction(tx);
+      // const petraWallet = new PetraWallet();
+      // const result = await petraWallet.signAndSubmitTransaction(tx);
 
       console.log(`Played ${choice} with account ${account.address}`);
-      console.log("Game result:", result);
-    } catch (err) {
-      setError(`Failed to play game: ${err}`);
-      console.error("Failed to play game:", err);
-    }
+      console.log("Game result:", response);
+    // } 
+    // catch (err) {
+      // setError(`Failed to play game: ${err}`);
+      // console.error("Failed to play game:", err);
+    // }
   };
 
   return (
