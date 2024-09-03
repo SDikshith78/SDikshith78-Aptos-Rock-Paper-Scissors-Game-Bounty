@@ -16,22 +16,17 @@ module RockPaperScissors {
     }
 
     public entry fun start_game(account: &signer) {
-    let player = signer::address_of(account);
+        let player = signer::address_of(account);
 
-    // Check if the account already has a Game resource stored
-    if (!exists<Game>(player)) {
-        // If the Game resource doesn't exist, create and move it to the account
         let game = Game {
             player,
             player_move: 0,
             computer_move: 0,
             result: 0,
         };
+
         move_to(account, game);
     }
-    // If the Game resource already exists, just proceed with the existing one
-}
-
 
     public entry fun set_player_move(account: &signer, player_move: u8) acquires Game {
         let game = borrow_global_mut<Game>(signer::address_of(account));
@@ -82,6 +77,5 @@ module RockPaperScissors {
     public fun get_game_results(account_addr: address): u8 acquires Game {
         borrow_global<Game>(account_addr).result
     }
-
 }
 }

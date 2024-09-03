@@ -1,14 +1,13 @@
 import React from 'react';
-import WalletConnectButton from './components/WalletConnectButton'; 
 import RockPaperScissors from './components/RockPaperScissors';
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 
 const App: React.FC = () => {
   return (
     <div>
       <h1>Rock-Paper-Scissors Game</h1>
-      <WalletConnectButton />
+      <WalletSelector />
       <RockPaperScissors />
-      {/* Other components or elements */}
     </div>
   );
 };
