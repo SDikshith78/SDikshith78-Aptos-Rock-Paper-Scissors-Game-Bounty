@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useWallet, InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
 const moduleAddress = "0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1";
@@ -8,6 +8,7 @@ const RockPaperScissors: React.FC = () => {
   const { account, connected, signAndSubmitTransaction } = useWallet();
   const [gameStarted, setGameStarted] = useState(false);
   const [playerMove, setPlayerMove] = useState<number | null>(null);
+  const [computerMove, setComputerMove] = useState<number | null>(null);
   const [gameResult, setGameResult] = useState<string | null>(null);
 
   const handleStartGame = async () => {
@@ -29,10 +30,10 @@ const RockPaperScissors: React.FC = () => {
       const response = await signAndSubmitTransaction(startGameTx);
       console.log("Game started:", response);
 
-      // Set game started state to true
       setGameStarted(true);
     } catch (err) {
       console.error("Failed to start the game:", err);
+      alert("Failed to start the game. Check the console for details.");
     }
   };
 
@@ -55,10 +56,36 @@ const RockPaperScissors: React.FC = () => {
       const response = await signAndSubmitTransaction(playFunction);
       console.log("Player move set:", response);
 
-      // Set the player's move
       setPlayerMove(move);
     } catch (err) {
       console.error("Failed to set the player move:", err);
+      alert("Failed to set your move. Check the console for details.");
+    }
+  };
+
+  const handleComputermove = async () => {
+    if (!connected || !account || !gameStarted) {
+      alert("Please start the game first and ensure your wallet is connected.");
+      return;
+    }
+
+    try {
+      const computerMoveTx: InputTransactionData = {
+        data: {
+          function: `${moduleAddress}::${moduleName}::randomly_set_computer_move`,
+          functionArguments: [],
+        },
+      };
+
+      console.log("Attempting to set computer move with transaction:", computerMoveTx);
+
+      const response = await signAndSubmitTransaction(computerMoveTx);
+      console.log("Computer move set:", response);
+
+      // Optionally, you can implement fetching the computer move here
+    } catch (err) {
+      console.error("Failed to set the computer move:", err);
+      alert("Failed to set computer move. Check the console for details.");
     }
   };
 
@@ -69,9 +96,12 @@ const RockPaperScissors: React.FC = () => {
     }
 
     try {
+      // Set computer move before getting the result
+      await handleComputermove();
+
       const getResultTx: InputTransactionData = {
         data: {
-          function: `${moduleAddress}::${moduleName}::get_game_results`,
+          function: `${moduleAddress}::${moduleName}::finalize_game_results`,
           functionArguments: [],
         },
       };
@@ -79,11 +109,8 @@ const RockPaperScissors: React.FC = () => {
       console.log("Attempting to get game result with transaction:", getResultTx);
 
       const response = await signAndSubmitTransaction(getResultTx);
-      console.log("Game result:", response);
+      console.log("Game result response:", response);
 
-      // Process the response to update the UI with the game result
-      // Example:
-      // Assuming the result is stored in the payload or response data
       const result = response.success ? response.payload : null;
 
       if (result) {
@@ -95,13 +122,23 @@ const RockPaperScissors: React.FC = () => {
         } else {
           setGameResult("You lost!");
         }
+
+        // Fetch computer move for displaying the result
+        const computerMoveResponse = await fetchComputerMove();
+        setComputerMove(computerMoveResponse);
       } else {
         setGameResult("Failed to retrieve game result.");
       }
     } catch (err) {
       console.error("Failed to get the game result:", err);
-      setGameResult("Error occurred while fetching the game result.");
+      alert("Failed to get the game result. Check the console for details.");
     }
+  };
+
+  const fetchComputerMove = async () => {
+    // Implement this function to fetch computer move if necessary
+    // For now, this is a placeholder
+    return null;
   };
 
   return (
@@ -128,6 +165,12 @@ const RockPaperScissors: React.FC = () => {
 
       {playerMove !== null && (
         <p>Your move: {playerMove === 1 ? "Rock" : playerMove === 2 ? "Paper" : "Scissors"}</p>
+      )}
+
+      {gameStarted && (
+        <button onClick={handleComputermove} disabled={!playerMove}>
+          Set Computer Move
+        </button>
       )}
 
       <button onClick={handleGetResult} disabled={!gameStarted}>
