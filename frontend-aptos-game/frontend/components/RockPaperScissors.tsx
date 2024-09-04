@@ -4,6 +4,12 @@ import { useWallet, InputTransactionData } from "@aptos-labs/wallet-adapter-reac
 const moduleAddress = "0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1";
 const moduleName = "RockPaperScissors";
 
+const moveNames = {
+  1: "Rock",
+  2: "Paper",
+  3: "Scissors"
+};
+
 const RockPaperScissors: React.FC = () => {
   const { account, connected, signAndSubmitTransaction } = useWallet();
   const [gameStarted, setGameStarted] = useState(false);
@@ -82,7 +88,10 @@ const RockPaperScissors: React.FC = () => {
       const response = await signAndSubmitTransaction(computerMoveTx);
       console.log("Computer move set:", response);
 
-      // Optionally, you can implement fetching the computer move here
+      // Optionally, fetch the computer move here or just log the result
+      const computerMove = await fetchComputerMove();
+      console.log("Computer chose:", moveNames[computerMove]);
+      setComputerMove(computerMove);
     } catch (err) {
       console.error("Failed to set the computer move:", err);
       alert("Failed to set computer move. Check the console for details.");
@@ -111,10 +120,10 @@ const RockPaperScissors: React.FC = () => {
       const response = await signAndSubmitTransaction(getResultTx);
       console.log("Game result response:", response);
 
+      // Process game result
       const result = response.success ? response.payload : null;
 
       if (result) {
-        // Update the game result state based on your contract logic
         if (result === 2) {
           setGameResult("You won!");
         } else if (result === 1) {
@@ -126,6 +135,7 @@ const RockPaperScissors: React.FC = () => {
         // Fetch computer move for displaying the result
         const computerMoveResponse = await fetchComputerMove();
         setComputerMove(computerMoveResponse);
+        console.log("Computer chose:", moveNames[computerMoveResponse]);
       } else {
         setGameResult("Failed to retrieve game result.");
       }
@@ -136,9 +146,21 @@ const RockPaperScissors: React.FC = () => {
   };
 
   const fetchComputerMove = async () => {
-    // Implement this function to fetch computer move if necessary
-    // For now, this is a placeholder
-    return null;
+    // Implement this function to fetch computer move from the contract
+    // For now, this is a placeholder returning a random value
+    try {
+      const result = await fetchGameMoveFromContract(); // Replace with actual function
+      return result;
+    } catch (err) {
+      console.error("Failed to fetch computer move:", err);
+      return null;
+    }
+  };
+
+  const fetchGameMoveFromContract = async () => {
+    // Implement this function to fetch the move from the smart contract
+    // Placeholder example
+    return 1; // Replace with actual implementation
   };
 
   return (
@@ -164,7 +186,7 @@ const RockPaperScissors: React.FC = () => {
       )}
 
       {playerMove !== null && (
-        <p>Your move: {playerMove === 1 ? "Rock" : playerMove === 2 ? "Paper" : "Scissors"}</p>
+        <p>Your move: {moveNames[playerMove]}</p>
       )}
 
       {gameStarted && (
