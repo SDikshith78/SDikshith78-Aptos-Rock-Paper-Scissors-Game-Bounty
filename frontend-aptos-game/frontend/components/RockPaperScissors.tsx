@@ -15,8 +15,11 @@ const GameContext = createContext({
   resetScore: () => {},
 });
 
-const moduleAddress = "0x5e9be1a9afb2f2e101cd0ab9fe5846cda29755f5783134be34751c4981e153b1";
-const moduleName = "RockPaperScissors";
+
+const moduleAddress = import.meta.env.VITE_MODULE_ADDRESS;
+const moduleName = import.meta.env.VITE_MODULE_NAME;
+
+
 
 const moveNames = {
   1: "Rock",
