@@ -8,7 +8,6 @@ import LoseLottie from "../../public/lottie/lose.json";
 import DrawLottie from "../../public/lottie/draw.json";
 import "./game.css"
 
-// Create a context for managing game state
 const GameContext = createContext({
   score: { player: 0, computer: 0 },
   incrementPlayerScore: () => {},
@@ -55,12 +54,12 @@ const RockPaperScissors: React.FC = () => {
       };
 
       const response = await signAndSubmitTransaction(startGameTx);
-      console.log("Game started:", response);
+      // console.log("Game started:", response);
 
       setGameStarted(true);
-      setErrorMessage(null); // Clear any existing error
+      setErrorMessage(null); 
     } catch (err) {
-      console.error("Failed to start the game:", err);
+      // console.error("Failed to start the game:", err);
       setErrorMessage("Failed to start the game. Check the console for details.");
     }
   };
@@ -80,12 +79,12 @@ const RockPaperScissors: React.FC = () => {
       };
 
       const response = await signAndSubmitTransaction(playFunction);
-      console.log("Player move set:", response);
+      // console.log("Player move set:", response);
 
       setPlayerMove(move);
       setErrorMessage(null); // Clear any existing error
     } catch (err) {
-      console.error("Failed to set the player move:", err);
+      // console.error("Failed to set the player move:", err);
       setErrorMessage("Failed to set your move. Check the console for details.");
     }
   };
@@ -105,11 +104,11 @@ const RockPaperScissors: React.FC = () => {
       };
 
       const response = await signAndSubmitTransaction(computerMoveTx);
-      console.log("Computer move set:", response);
+      // console.log("Computer move set:", response);
 
       setErrorMessage(null); // Clear any existing error
     } catch (err) {
-      console.error("Failed to set the computer move:", err);
+      // console.error("Failed to set the computer move:", err);
       setErrorMessage("Failed to set computer move. Check the console for details.");
     }
   };
@@ -131,7 +130,7 @@ const RockPaperScissors: React.FC = () => {
       await signAndSubmitTransaction(getResultTx);
       await fetchGameResult();
     } catch (err) {
-      console.error("Failed to get the game result:", err);
+      // console.error("Failed to get the game result:", err);
       setErrorMessage("Failed to get game result. Check the console for details.");
     }
   };
@@ -151,9 +150,9 @@ const RockPaperScissors: React.FC = () => {
       if (result === 2) incrementPlayerScore();
       if (result === 3) incrementComputerScore();
 
-      console.log(getResult);
+      // console.log(getResult);
     } catch (e: any) {
-      console.log(e);
+      // console.log(e);
       setErrorMessage("Error fetching game result. Check the console for details.");
     }
   };
@@ -169,7 +168,6 @@ const RockPaperScissors: React.FC = () => {
     handlePlayAgain();
     resetScore(); // Reset scores
     setGameStarted(false); // Reset game state
-    // Optionally, disconnect wallet here if desired
   };
 
   return (

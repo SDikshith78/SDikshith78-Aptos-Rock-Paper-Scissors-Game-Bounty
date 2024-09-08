@@ -9,7 +9,7 @@ const LoadingScreen: React.FC = () => {
     // Set timeout for loading screen
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // Adjust the time as needed
+    }, 3000); 
 
     // Clean up the timer on component unmount
     return () => clearTimeout(timer);
@@ -25,7 +25,6 @@ const LoadingScreen: React.FC = () => {
 
   return (
     <div className="main-ui">
-      {/* Your main UI content here */}
       <h1>Main Game UI</h1>
     </div>
   );
