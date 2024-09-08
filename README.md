@@ -2,6 +2,9 @@
 
 -----------------------------------   Bounty - Level Up Your Rock Paper Scissors Game with Aptos ---------------------------------------
 
+Video Demo link: Click to see
+https://github.com/user-attachments/assets/a5ef0e79-291f-40df-9018-c78f23bd83cd
+
   ------------------------------------------------------------------ PROJECT OVERVIEW -------------------------------------------------------
   
 As demonstrated in the Move on Aptos III Quest-3, we developed a Rock Paper Scissors game using the Move programming language. The game logic is defined within the smart contract, handling player moves, generating random computer moves, and determining the game outcome (win/lose/draw). This contract was deployed on the Aptos Testnet. Additionally, we implemented the Aptos Randomness API for generating random computer moves.
